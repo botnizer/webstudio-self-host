@@ -2,7 +2,7 @@ services:
   # ── MinIO (S3-compatible object storage) ────────────────────────────────────
   minio:
     image: minio/minio:latest
-    restart: unless-stopped
+    restart: always
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
@@ -41,7 +41,7 @@ services:
   # ── PostgreSQL ──────────────────────────────────────────────────────────────
   db:
     image: postgres:15-alpine
-    restart: unless-stopped
+    restart: always
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: webstudio
@@ -57,7 +57,7 @@ services:
   # ── PostgREST ───────────────────────────────────────────────────────────────
   postgrest:
     image: postgrest/postgrest:v12.2.0
-    restart: unless-stopped
+    restart: always
     depends_on:
       db:
         condition: service_healthy
@@ -115,7 +115,7 @@ services:
   #   SSG domains → static files served directly from /var/publish/<domain>/
   publisher:
     image: ${PUBLISHER_IMAGE:-ghcr.io/webstudio-community/webstudio-publisher:latest}
-    restart: unless-stopped
+    restart: always
     depends_on:
       app:
         condition: service_healthy
@@ -143,7 +143,7 @@ services:
   # ── Webstudio builder ───────────────────────────────────────────────────────
   app:
     image: ${BUILDER_IMAGE:-ghcr.io/webstudio-community/builder:latest}
-    restart: unless-stopped
+    restart: always
     depends_on:
       migrate:
         condition: service_completed_successfully
