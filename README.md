@@ -1,12 +1,12 @@
 # webstudio-self-host
 
-Docker Compose setup to self-host [Webstudio](https://webstudio.is) — the open-source visual development platform.
+Docker Compose setup to self-host [Webstudio](https://webstudio.is), the open-source visual development platform.
 
 > **Requirements:** Linux server · Docker ≥ 24 · Compose v2 · 2 GB RAM · 10 GB disk
 
 This repo provides two compose files:
-- `docker-compose.yml` — plain Docker Compose (any Linux server)
-- `docker-compose.coolify.yml` — optimised for [Coolify](https://coolify.io) with Traefik and auto-generated secrets
+- `docker-compose.yml`: plain Docker Compose (any Linux server)
+- `docker-compose.coolify.yml`: optimised for [Coolify](https://coolify.io) with Traefik and auto-generated secrets
 
 ## What's included
 
@@ -15,7 +15,7 @@ This repo provides two compose files:
 | `app` | Webstudio builder (Remix app) |
 | `db` | PostgreSQL 15 |
 | `db-setup` | Grants PostgREST permissions on DB tables (runs once) |
-| `postgrest` | PostgREST — REST API over the DB |
+| `postgrest` | PostgREST (REST API over the DB) |
 | `migrate` | Runs Prisma migrations on startup |
 | `minio` | S3-compatible object storage for assets |
 | `nginx` | Serves published static sites |
@@ -30,7 +30,7 @@ git clone https://github.com/webstudio-community/webstudio-self-host.git
 cd webstudio-self-host
 
 cp .env.example .env
-# Edit .env — change every "change-me" value
+# Edit .env -> change every "change-me" value
 ```
 
 Generate the required secrets:
@@ -49,7 +49,7 @@ openssl rand -hex 64
 openssl rand -hex 32
 ```
 
-Also set `DEPLOYMENT_URL` in your `.env` to your builder's public URL — required in production regardless of login mode:
+Also set `DEPLOYMENT_URL` in your `.env` to your builder's public URL (required in production regardless of login mode):
 
 ```env
 DEPLOYMENT_URL=https://webstudio.your-domain.com
@@ -79,11 +79,11 @@ The setup uses **three domain scopes**, each with its own wildcard:
 | `*.webstudio.your-domain.com` | Canvas preview iframes (one per project) | `app` (Traefik label) |
 | `*.wstdwork.your-domain.com` | Published static sites | `nginx` (Traefik label) |
 
-The first domain is configured via Coolify's UI. The other two require **Traefik labels** in the compose file — Coolify routes based on these labels but does not manage them through its UI.
+The first domain is configured via Coolify's UI. The other two require **Traefik labels** in the compose file. Coolify routes based on these labels but does not manage them through its UI.
 
-### 1 — DNS records
+### 1. DNS records
 
-Create these records in your DNS provider (no proxy/CDN — orange cloud off if using Cloudflare):
+Create these records in your DNS provider (no proxy/CDN. Orange cloud off if using Cloudflare):
 
 | Type | Name | Content |
 |------|------|---------|
@@ -94,7 +94,7 @@ Create these records in your DNS provider (no proxy/CDN — orange cloud off if 
 > `wstdwork` is the subdomain prefix for published sites. You can pick any name — just
 > make sure it matches `PUBLISHER_HOST` in your env and the labels in the compose file.
 
-### 2 — Configure Traefik in Coolify
+### 2. Configure Traefik in Coolify
 
 Webstudio needs wildcard TLS certificates, which require a DNS challenge. Coolify uses
 Traefik as its reverse proxy — you need to add the Cloudflare resolver and the gzip
@@ -139,7 +139,7 @@ http:
 > must exactly match the value in `tls.certresolver=cloudflare` in the Traefik labels
 > of the compose file. If you change one, change the other.
 
-### 3 — Update Traefik labels in the compose file
+### 3. Update Traefik labels in the compose file
 
 Coolify does **not** interpolate environment variables inside Traefik labels. You must
 edit `docker-compose.coolify.yml` directly and replace the placeholder domains with
@@ -174,7 +174,7 @@ your actual values before deploying.
 - "traefik.http.routers.ws-publisher.tls.domains[0].sans=wstdwork.your-domain.com"
 ```
 
-### 4 — Create the resource in Coolify
+### 4. Create the resource in Coolify
 
 In your Coolify project: **New resource → Docker Compose → From a Git repository**
 
@@ -206,7 +206,7 @@ DEV_LOGIN_EMAIL=admin@example.com
 # Note: DEPLOYMENT_URL is automatically set from SERVICE_URL_APP by the compose file
 ```
 
-### 5 — Deploy
+### 5. Deploy
 
 Click **Deploy** in Coolify. First deploy takes 2–3 min (pulls images, runs DB migrations).
 
@@ -230,7 +230,7 @@ DB migrations run automatically on every restart.
 
 Three login modes are available. Choose one and set the corresponding variables.
 
-### Option A — Simple password login (default)
+### Option A: Simple password login (default)
 
 No external provider needed. Set in `.env` (plain Compose) or Coolify environment:
 
@@ -241,7 +241,7 @@ DEV_LOGIN_EMAIL=admin@example.com
 
 The password is the value of `AUTH_SECRET` (visible in Coolify under the service's environment variables).
 
-### Option B — GitHub OAuth
+### Option B: GitHub OAuth
 
 1. Go to **github.com → Settings → Developer Settings → OAuth Apps → New OAuth App**
 2. Fill in:
@@ -258,7 +258,7 @@ DEPLOYMENT_URL=https://webstudio.your-domain.com
 
 > With Coolify: `DEPLOYMENT_URL` is automatically set from `SERVICE_URL_APP` by the compose file — no need to add it manually.
 
-### Option C — Google OAuth
+### Option C: Google OAuth
 
 1. Go to **console.cloud.google.com → APIs & Services → Credentials → Create OAuth 2.0 Client ID**
 2. Application type: **Web application**
@@ -298,10 +298,10 @@ Apex domains cannot use a CNAME record with most DNS providers. The builder dete
 **Steps:**
 
 1. In the builder, open **Publish → Add a new domain** and enter `example.com`
-2. The panel shows the A record and TXT record to create — copy the TXT value
+2. The panel shows the A record and TXT record to create. Copy the TXT value
 3. In your DNS provider, create both records
 4. Wait for DNS propagation (a few minutes to an hour), then click **Verify**
-5. Publish — the site is served from `example.com` with an automatic Let's Encrypt certificate
+5. Publish. The site is served from `example.com` with an automatic Let's Encrypt certificate
 
 Each apex domain is independent: multiple projects can each have their own apex domain pointing to the same server.
 
@@ -311,32 +311,32 @@ Each apex domain is independent: multiple projects can each have their own apex 
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `POSTGRES_PASSWORD` | ✅ | — | PostgreSQL password |
-| `PGRST_JWT_SECRET` | ✅ | — | Secret for PostgREST JWT auth (≥ 64 chars) |
-| `AUTH_SECRET` | ✅ | — | Session cookie signing secret |
-| `APP_FQDN` | ✅ (Coolify) | — | Builder public domain (e.g. `webstudio.your-domain.com`) |
-| `DEV_LOGIN` | — | — | `true` = password login using `AUTH_SECRET` as the password. |
-| `DEV_LOGIN_EMAIL` | — | `admin@example.com` | Email used for dev login |
-| `GH_CLIENT_ID` / `GH_CLIENT_SECRET` | — | — | GitHub OAuth |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | — | — | Google OAuth |
-| `DEPLOYMENT_URL` | ✅ | — | Builder's public URL with protocol (e.g. `https://webstudio.your-domain.com`). Required in production for all login modes. Auto-set from `SERVICE_URL_APP` in Coolify. |
-| `DEPLOYMENT_ENVIRONMENT` | — | — | Set to `production` automatically by both compose files. |
-| `AUTH_WS_CLIENT_ID` | ✅ (prod) | — | OAuth server credential for the webstudio CLI. Any non-empty value. Auto-set in Coolify. |
-| `AUTH_WS_CLIENT_SECRET` | ✅ (prod) | — | OAuth server secret for the webstudio CLI. Any strong random value. Auto-set in Coolify. |
-| `PUBLISHER_HOST` | — | `wstd.work` | Domain suffix for published project URLs |
-| `TRPC_SERVER_API_TOKEN` | — | — | Service token shared between builder and publisher |
-| `SELF_HOSTED_PUBLISHER_URL` | — | `http://publisher:4000` | Internal publisher URL |
-| `FEATURES` | — | `*` | Feature flags (`*` = all enabled) |
-| `USER_PLAN` | — | `pro` | Plan level for all users |
-| `MAX_ASSETS_PER_PROJECT` | — | `50` | Asset upload limit per project |
-| `S3_ENDPOINT` / `S3_REGION` / `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` / `S3_BUCKET` | — | MinIO defaults | S3-compatible storage |
-| `ENTRI_APPLICATION_ID` / `ENTRI_SECRET` | — | — | Entri automatic DNS setup (optional) |
-| `BUILDER_IMAGE` | — | `ghcr.io/webstudio-community/builder:latest` | Builder Docker image |
-| `PUBLISHER_IMAGE` | — | `ghcr.io/webstudio-community/webstudio-publisher:latest` | Publisher Docker image |
+| `POSTGRES_PASSWORD` | ✅ | - | PostgreSQL password |
+| `PGRST_JWT_SECRET` | ✅ | - | Secret for PostgREST JWT auth (≥ 64 chars) |
+| `AUTH_SECRET` | ✅ | - | Session cookie signing secret |
+| `APP_FQDN` | ✅ (Coolify) | - | Builder public domain (e.g. `webstudio.your-domain.com`) |
+| `DEV_LOGIN` | - | - | `true` = password login using `AUTH_SECRET` as the password. |
+| `DEV_LOGIN_EMAIL` | - | `admin@example.com` | Email used for dev login |
+| `GH_CLIENT_ID` / `GH_CLIENT_SECRET` | - | - | GitHub OAuth |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | - | - | Google OAuth |
+| `DEPLOYMENT_URL` | ✅ | - | Builder's public URL with protocol (e.g. `https://webstudio.your-domain.com`). Required in production for all login modes. Auto-set from `SERVICE_URL_APP` in Coolify. |
+| `DEPLOYMENT_ENVIRONMENT` | - | - | Set to `production` automatically by both compose files. |
+| `AUTH_WS_CLIENT_ID` | ✅ (prod) | - | OAuth server credential for the webstudio CLI. Any non-empty value. Auto-set in Coolify. |
+| `AUTH_WS_CLIENT_SECRET` | ✅ (prod) | - | OAuth server secret for the webstudio CLI. Any strong random value. Auto-set in Coolify. |
+| `PUBLISHER_HOST` | - | `wstd.work` | Domain suffix for published project URLs |
+| `TRPC_SERVER_API_TOKEN` | - | - | Service token shared between builder and publisher |
+| `SELF_HOSTED_PUBLISHER_URL` | - | `http://publisher:4000` | Internal publisher URL |
+| `FEATURES` | - | `*` | Feature flags (`*` = all enabled) |
+| `USER_PLAN` | - | `pro` | Plan level for all users |
+| `MAX_ASSETS_PER_PROJECT` | - | `50` | Asset upload limit per project |
+| `S3_ENDPOINT` / `S3_REGION` / `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` / `S3_BUCKET` | - | MinIO defaults | S3-compatible storage |
+| `ENTRI_APPLICATION_ID` / `ENTRI_SECRET` | - | - | Entri automatic DNS setup (optional) |
+| `BUILDER_IMAGE` | - | `ghcr.io/webstudio-community/builder:latest` | Builder Docker image |
+| `PUBLISHER_IMAGE` | - | `ghcr.io/webstudio-community/webstudio-publisher:latest` | Publisher Docker image |
 
 ---
 
 ## Related repositories
 
-- [webstudio-fork](https://github.com/webstudio-community/webstudio-fork) — builder with self-hosting patches, Docker image CI
-- [webstudio-publisher](https://github.com/webstudio-community/webstudio-publisher) — publisher service source and Docker image CI
+- [webstudio-fork](https://github.com/webstudio-community/webstudio-fork): builder with self-hosting patches, Docker image CI
+- [webstudio-publisher](https://github.com/webstudio-community/webstudio-publisher): publisher service source and Docker image CI
