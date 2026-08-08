@@ -173,7 +173,7 @@ services:
     # before deploying. Replace "webstudio.botnizer.com" with your actual app domain.
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ws-canvas.rule=HostRegexp(`^.+[.]webstudio[.]example[.]com`)"
+      - "traefik.http.routers.ws-canvas.rule=HostRegexp(`^.+[.]webstudio[.]botnizer[.]com`)"
       - "traefik.http.routers.ws-canvas.entrypoints=https"
       - "traefik.http.routers.ws-canvas.tls=true"
       - "traefik.http.routers.ws-canvas.tls.certresolver=cloudflare"
@@ -223,7 +223,7 @@ services:
       retries: 3
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ws-publisher.rule=HostRegexp(`^.+[.]wstdwork[.]example[.]com`)"
+      - "traefik.http.routers.ws-publisher.rule=HostRegexp(`^.+[.]wstdwork[.]botnizer[.]com`)"
       - "traefik.http.routers.ws-publisher.entrypoints=https"
       - "traefik.http.routers.ws-publisher.tls=true"
       - "traefik.http.routers.ws-publisher.tls.certresolver=cloudflare"
