@@ -132,7 +132,7 @@ services:
       - DIRECT_URL=postgresql://postgres:${SERVICE_PASSWORD_DB}@db:5432/webstudio
       - AUTH_SECRET=${SERVICE_PASSWORD_AUTH}
       - DEV_LOGIN=${DEV_LOGIN:-true}
-      - DEV_LOGIN_EMAIL=${DEV_LOGIN_EMAIL:-admin@example.com}
+      - DEV_LOGIN_EMAIL=${DEV_LOGIN_EMAIL:-admin@botnizer.com}
       - GH_CLIENT_ID=${GH_CLIENT_ID:-}
       - GH_CLIENT_SECRET=${GH_CLIENT_SECRET:-}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
@@ -170,15 +170,15 @@ services:
       - uploads:/app/public/s/uploads
     # Traefik labels for canvas wildcard subdomain routing.
     # NOTE: Coolify does NOT interpolate ${VAR} in labels — update the domain values below
-    # before deploying. Replace "webstudio.example.com" with your actual app domain.
+    # before deploying. Replace "webstudio.botnizer.com" with your actual app domain.
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ws-canvas.rule=HostRegexp(`^.+[.]webstudio[.]example[.]com`)"
       - "traefik.http.routers.ws-canvas.entrypoints=https"
       - "traefik.http.routers.ws-canvas.tls=true"
       - "traefik.http.routers.ws-canvas.tls.certresolver=cloudflare"
-      - "traefik.http.routers.ws-canvas.tls.domains[0].main=*.webstudio.example.com"
-      - "traefik.http.routers.ws-canvas.tls.domains[0].sans=webstudio.example.com"
+      - "traefik.http.routers.ws-canvas.tls.domains[0].main=*.webstudio.botnizer.com"
+      - "traefik.http.routers.ws-canvas.tls.domains[0].sans=webstudio.botnizer.com"
       - "traefik.http.routers.ws-canvas.service=ws-canvas-svc"
       - "traefik.http.routers.ws-canvas.middlewares=gzip"
       - "traefik.http.services.ws-canvas-svc.loadbalancer.server.port=3000"
@@ -191,7 +191,7 @@ services:
   #
   # Traefik labels for published sites wildcard routing.
   # NOTE: Coolify does NOT interpolate ${VAR} in labels — update the domain values below
-  # before deploying. Replace "wstdwork.example.com" with your PUBLISHER_HOST value.
+  # before deploying. Replace "wstdwork.botnizer.com" with your PUBLISHER_HOST value.
   publisher:
     image: ${PUBLISHER_IMAGE:-ghcr.io/webstudio-community/webstudio-publisher:latest}
     restart: always
@@ -227,8 +227,8 @@ services:
       - "traefik.http.routers.ws-publisher.entrypoints=https"
       - "traefik.http.routers.ws-publisher.tls=true"
       - "traefik.http.routers.ws-publisher.tls.certresolver=cloudflare"
-      - "traefik.http.routers.ws-publisher.tls.domains[0].main=*.wstdwork.example.com"
-      - "traefik.http.routers.ws-publisher.tls.domains[0].sans=wstdwork.example.com"
+      - "traefik.http.routers.ws-publisher.tls.domains[0].main=*.wstdwork.botnizer.com"
+      - "traefik.http.routers.ws-publisher.tls.domains[0].sans=wstdwork.botnizer.com"
       - "traefik.http.routers.ws-publisher.service=ws-publisher-svc"
       - "traefik.http.routers.ws-publisher.middlewares=gzip"
       - "traefik.http.services.ws-publisher-svc.loadbalancer.server.port=4001"
